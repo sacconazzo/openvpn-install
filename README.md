@@ -1,5 +1,47 @@
 # openvpn-install
 
+This script installs an OpenVPN server and configures server and clients connections.
+
+This custom version could be practical for your own VPS server or your own home network.
+Customization below:
+- enabled comunications between clients
+- you can disable internet gateway tunneling on clients (for mantain local gateway and the same public IP)
+
+1. Run script
+```
+sudo ./debian10-vpn.sh
+```
+
+2. Follow instructions (more info at the bottom of the page)
+
+3. When asked:
+```
+What DNS resolvers do you want to use with the VPN?
+```
+select 14:
+```
+14) Exclude tunneling internet gateway
+```
+
+4. DONE!
+
+
+## configurations details
+server.conf:
+```
+# push "dhcp-option DNS 1.0.0.1"
+# push "dhcp-option DNS 1.1.1.1"
+# push "redirect-gateway def1 bypass-dhcp"
+client-to-client
+```
+clients ovpn files:
+```
+# ignore-unknown-option block-outside-dns
+# setenv opt block-outside-dns # Prevent Windows 10 DNS leak
+```
+
+
+
 ![Test](https://github.com/angristan/openvpn-install/workflows/Test/badge.svg) ![Lint](https://github.com/angristan/openvpn-install/workflows/Lint/badge.svg)
 
 OpenVPN installer for Debian, Ubuntu, Fedora, CentOS and Arch Linux.

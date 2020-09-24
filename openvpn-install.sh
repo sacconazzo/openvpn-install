@@ -312,7 +312,8 @@ function installQuestions() {
 	echo "   11) AdGuard DNS (Anycast: worldwide)"
 	echo "   12) NextDNS (Anycast: worldwide)"
 	echo "   13) Custom"
-	until [[ $DNS =~ ^[0-9]+$ ]] && [ "$DNS" -ge 1 ] && [ "$DNS" -le 13 ]; do
+	echo "   14) Exclude tunneling internet gateway"
+	until [[ $DNS =~ ^[0-9]+$ ]] && [ "$DNS" -ge 1 ] && [ "$DNS" -le 14 ]; do
 		read -rp "DNS [1-12]: " -e -i 11 DNS
 		if [[ $DNS == 2 ]] && [[ -e /etc/unbound/unbound.conf ]]; then
 			echo ""
@@ -836,8 +837,15 @@ ifconfig-pool-persist ipp.txt" >>/etc/openvpn/server.conf
 			echo "push \"dhcp-option DNS $DNS2\"" >>/etc/openvpn/server.conf
 		fi
 		;;
+	14)
+		echo '# push "dhcp-option DNS X.X.X.X"' >>/etc/openvpn/server.conf
+		echo '# push "dhcp-option DNS X.X.X.X"' >>/etc/openvpn/server.conf
+		echo '# push "redirect-gateway def1 bypass-dhcp"' >>/etc/openvpn/server.conf
+		;;
 	esac
-	echo 'push "redirect-gateway def1 bypass-dhcp"' >>/etc/openvpn/server.conf
+	if [[ $DNS != '14' ]]; then
+		echo 'push "redirect-gateway def1 bypass-dhcp"' >>/etc/openvpn/server.conf
+	fi
 
 	# IPv6 network settings if needed
 	if [[ $IPV6_SUPPORT == 'y' ]]; then
@@ -880,6 +888,7 @@ tls-version-min 1.2
 tls-cipher $CC_CIPHER
 client-config-dir /etc/openvpn/ccd
 status /var/log/openvpn/status.log
+client-to-client
 verb 3" >>/etc/openvpn/server.conf
 
 	# Create client-config-dir dir
@@ -1029,8 +1038,8 @@ cipher $CIPHER
 tls-client
 tls-version-min 1.2
 tls-cipher $CC_CIPHER
-ignore-unknown-option block-outside-dns
-setenv opt block-outside-dns # Prevent Windows 10 DNS leak
+# ignore-unknown-option block-outside-dns
+# setenv opt block-outside-dns # Prevent Windows 10 DNS leak
 verb 3" >>/etc/openvpn/client-template.txt
 
 	if [[ $COMPRESSION_ENABLED == "y" ]]; then
