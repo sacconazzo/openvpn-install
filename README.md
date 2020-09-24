@@ -9,7 +9,7 @@ Customization below:
 
 1. Run script
 ```
-sudo ./debian10-vpn.sh
+sudo ./openvpn-install.sh
 ```
 
 2. Follow instructions (more info at the bottom of the page)
