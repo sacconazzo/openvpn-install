@@ -1,4 +1,4 @@
-# openvpn-install
+# openvpn-install-and-config
 
 This script installs an OpenVPN server and configures server and clients connections.
 
@@ -40,6 +40,9 @@ clients ovpn files:
 # setenv opt block-outside-dns # Prevent Windows 10 DNS leak
 ```
 
+
+
+# openvpn-install
 
 
 ![Test](https://github.com/angristan/openvpn-install/workflows/Test/badge.svg) ![Lint](https://github.com/angristan/openvpn-install/workflows/Lint/badge.svg)
